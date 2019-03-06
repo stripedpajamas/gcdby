@@ -29,7 +29,7 @@ func TestTruncate(t *testing.T) {
 	}
 }
 
-func TestGetIterations(t *testing.T) {
+func TestIterations(t *testing.T) {
 	type Test struct {
 		d        uint
 		expected uint
@@ -39,12 +39,69 @@ func TestGetIterations(t *testing.T) {
 		Test{d: 1, expected: 7},
 	}
 	for _, test := range testCases {
-		result := getIterations(test.d)
+		result := iterations(test.d)
 		if result != test.expected {
 			t.Errorf("getIterations(%d) wanted %d, got %d",
 				test.d,
 				test.expected,
 				result,
+			)
+		}
+	}
+}
+
+func TestDivstep(t *testing.T) {
+	type Test struct {
+		n        uint
+		t        uint
+		delta    int
+		initialF *big.Int
+		initialG *big.Int
+		expected step
+	}
+	testCases := []Test{
+		Test{
+			n: 1, t: 2, delta: 3, initialF: big.NewInt(4), initialG: big.NewInt(5),
+			expected: step{delta: -2, f: big.NewInt(1), g: big.NewInt(0), p: []*big.Float{
+				zerof, onef, big.NewFloat(-0.5), zerof,
+			}},
+		},
+	}
+	equalStep := func(a, b step) bool {
+		if a.delta != b.delta || a.f != b.f || a.g != b.g {
+			return false
+		}
+		for i, fa := range a.p {
+			fb := a.p[i]
+			if fa.Cmp(fb) != 0 {
+				return false
+			}
+		}
+		return true
+	}
+	for _, test := range testCases {
+		result := divstep(test.n, test.t, test.delta, test.initialF, test.initialG)
+		if !equalStep(result, test.expected) {
+			t.Errorf(`divstep wanted
+step.delta: %d; got %d
+step.f: %s; got %s
+step.g: %s; got %s
+step.p: [%s, %s, %s, %s]; got [%s, %s, %s, %s]
+				`,
+				test.expected.delta,
+				result.delta,
+				test.expected.f.String(),
+				result.f.String(),
+				test.expected.g.String(),
+				result.g.String(),
+				test.expected.p[0].String(),
+				test.expected.p[1].String(),
+				test.expected.p[2].String(),
+				test.expected.p[3].String(),
+				result.p[0].String(),
+				result.p[1].String(),
+				result.p[2].String(),
+				result.p[3].String(),
 			)
 		}
 	}
