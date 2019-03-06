@@ -19,7 +19,7 @@ assert.strictEqual(getBitLength(1), 1)
 // truncate
 assert.strictEqual(truncate(100, 5), 4)
 assert.strictEqual(truncate(12345, 3), 1)
-assert.strictEqual(truncate(1, 1), -1)
+assert.strictEqual(truncate(369, 41), 369)
 
 // divSteps
 assert.deepStrictEqual(divSteps(1, 2, 3, 4, 5), [-2, 1, 0, [0, 1, -1 / 2, 0]])

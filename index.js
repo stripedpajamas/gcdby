@@ -18,18 +18,15 @@ function divSteps (initialN, initialT, initialDelta, initialF, initialG) {
   if (initialT < initialN || initialN < 0) {
     throw new Error('invalid parameters for divSteps')
   }
-  let n = initialN
-  let t = initialT
-  let delta = initialDelta
+  let [n, t, delta] = [initialN, initialT, initialDelta]
   let f = truncate(initialF, t)
   let g = truncate(initialG, t)
-  let u = 1
-  let v = 0
-  let q = 0
-  let r = 1
+  let [u, v, q, r] = [1, 0, 0, 1]
 
   while (n > 0) {
+    console.log(JSON.stringify({ delta, f, g, u, v, q, r }))
     f = truncate(f, t)
+    console.log('trunc f', f, t)
     if (delta > 0 && (g & 1)) {
       [delta, f, g, u, v, q, r] = [-delta, g, -f, q, r, -u, -v]
     }
