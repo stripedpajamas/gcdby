@@ -14,27 +14,13 @@ function truncate (f, t) {
   return ((f + twoT) & (2 * twoT - 1)) - twoT
 }
 
-function QQ () {
-  // TODO implement this
-}
-
-function ZZ () {
-  // TODO implement this
-}
-
-function m2q (a, b) {
-  return function (arr) {
-    // TODO implement this
-  }
-}
-
 function divSteps (initialN, initialT, initialDelta, initialF, initialG) {
   if (initialT < initialN || initialN < 0) {
     throw new Error('invalid parameters for divSteps')
   }
+  let n = initialN
   let t = initialT
   let delta = initialDelta
-  let n = initialN
   let f = truncate(initialF, t)
   let g = truncate(initialG, t)
   let u = 1
@@ -45,28 +31,18 @@ function divSteps (initialN, initialT, initialDelta, initialF, initialG) {
   while (n > 0) {
     f = truncate(f, t)
     if (delta > 0 && (g & 1)) {
-      delta = -delta
-      f = g
-      g = -f
-      u = q
-      v = r
-      q = -u
-      r = -v
+      [delta, f, g, u, v, q, r] = [-delta, g, -f, q, r, -u, -v]
     }
     let g0 = g & 1
-    delta = 1 + delta
-    g = (g + g0 * f) / 2
-    q = (q + g0 * u) / 2
-    r = (r + g0 * v) / 2
+    ;[delta, g, q, r] = [1 + delta, (g + g0 * f) / 2, (q + g0 * u) / 2, (r + g0 * v) / 2]
     n -= 1
     t -= 1
-    g = truncate(ZZ(g), t)
+    g = truncate(g, t)
   }
-  const m2q = matrixSpace(QQ(), 2) // TODO what is QQ ?
-  return [delta, f, g, m2q([u, v, q, r])]
+  return [delta, f, g, [u, v, q, r]]
 }
 
-function getGcd (f, g) {
+function gcd (f, g) {
   if (!(f & 1)) {
     throw new Error('getGcd(f, g) only works if f is odd')
   }
@@ -76,4 +52,10 @@ function getGcd (f, g) {
   return Math.abs(fm)
 }
 
-module.exports = getGcd
+module.exports = {
+  gcd,
+  divSteps,
+  truncate,
+  getIterations,
+  getBitLength
+}
