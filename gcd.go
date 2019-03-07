@@ -75,14 +75,21 @@ func GcdInt(f, g int) int {
 	return 0
 }
 
-func Gcd(f, g *big.Int) {
+func Gcd(f, g *big.Int) *big.Int {
 	f1 := new(big.Int).And(f, one)
 	if f1.Cmp(one) == 0 {
 		panic("f must be odd")
 	}
+	var d uint
+	fd := f.BitLen()
+	gd := g.BitLen()
+	if gd > fd {
+		d = uint(gd)
+	} else {
+		d = uint(fd)
+	}
+	m := iterations(d)
 
-	// const d = Math.max(getBitLength(f), getBitLength(g))
-	// const m = getIterations(d)
-	// const [delta, fm, gm, P] = divSteps(m, m + d, 1, f, g)
-	// return Math.abs(fm)
+	step := divstep(m, m+d, 1, f, g)
+	return new(big.Int).Abs(step.f)
 }

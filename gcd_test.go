@@ -66,6 +66,12 @@ func TestDivstep(t *testing.T) {
 				zerof, onef, big.NewFloat(-0.5), zerof,
 			}},
 		},
+		Test{
+			n: 36, t: 47, delta: 1, initialF: big.NewInt(903), initialG: big.NewInt(1542),
+			expected: step{delta: 19, f: big.NewInt(-3), g: big.NewInt(0), p: []*big.Float{
+				big.NewFloat(73 / 32768), big.NewFloat(-213 / 65536), big.NewFloat(257 / 34359738368), big.NewFloat(-301 / 68719476736),
+			}},
+		},
 	}
 	equalStep := func(a, b step) bool {
 		if a.delta != b.delta || a.f.Cmp(b.f) != 0 || a.g.Cmp(b.g) != 0 {
@@ -102,6 +108,28 @@ step.p: [%s, %s, %s, %s]; got [%s, %s, %s, %s]
 				result.p[1].String(),
 				result.p[2].String(),
 				result.p[3].String(),
+			)
+		}
+	}
+}
+
+func TestGcd(t *testing.T) {
+	type Test struct {
+		f        *big.Int
+		g        *big.Int
+		expected *big.Int
+	}
+	testCases := []Test{
+		Test{f: big.NewInt(1542), g: big.NewInt(903), expected: big.NewInt(3)},
+	}
+	for _, test := range testCases {
+		result := Gcd(test.f, test.g)
+		if result.Cmp(test.expected) != 0 {
+			t.Errorf("Gcd(%s, %s) wanted %s, got %s",
+				test.f.String(),
+				test.g.String(),
+				test.expected.String(),
+				result.String(),
 			)
 		}
 	}
