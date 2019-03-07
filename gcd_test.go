@@ -68,7 +68,7 @@ func TestDivstep(t *testing.T) {
 		},
 	}
 	equalStep := func(a, b step) bool {
-		if a.delta != b.delta || a.f != b.f || a.g != b.g {
+		if a.delta != b.delta || a.f.Cmp(b.f) != 0 || a.g.Cmp(b.g) != 0 {
 			return false
 		}
 		for i, fa := range a.p {

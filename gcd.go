@@ -55,9 +55,9 @@ func divstep(n, t uint, delta int, initialF, initialG *big.Int) step {
 		g0.And(g, one)
 		g0f := new(big.Float).SetInt(g0)
 		delta = 1 + delta
-		g.Add(g, g0).Mul(g, f).Quo(g, two)   // (g+g0*f)/2
-		q.Add(q, g0f).Mul(q, u).Quo(q, twof) // (q+g0f*u)/2
-		r.Add(r, g0f).Mul(r, v).Quo(r, twof) // (r+g0f*v)/2
+		g.Add(g, new(big.Int).Mul(g0, f)).Quo(g, two)     // (g+g0*f)/2
+		q.Add(q, new(big.Float).Mul(g0f, u)).Quo(q, twof) // (q+g0f*u)/2
+		r.Add(r, new(big.Float).Mul(g0f, v)).Quo(r, twof) // (r+g0f*v)/2
 		n, t = n-1, t-1
 		g = truncate(g, t)
 	}

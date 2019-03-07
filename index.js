@@ -24,14 +24,14 @@ function divSteps (initialN, initialT, initialDelta, initialF, initialG) {
   let [u, v, q, r] = [1, 0, 0, 1]
 
   while (n > 0) {
-    console.log(JSON.stringify({ delta, f, g, u, v, q, r }))
     f = truncate(f, t)
-    console.log('trunc f', f, t)
     if (delta > 0 && (g & 1)) {
       [delta, f, g, u, v, q, r] = [-delta, g, -f, q, r, -u, -v]
     }
+    // console.log({ u, v, q, r })
     let g0 = g & 1
     ;[delta, g, q, r] = [1 + delta, (g + g0 * f) / 2, (q + g0 * u) / 2, (r + g0 * v) / 2]
+    console.log({ g, q, r })
     n -= 1
     t -= 1
     g = truncate(g, t)
